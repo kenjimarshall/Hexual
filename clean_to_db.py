@@ -33,8 +33,8 @@ def generate_scheme(artist, popularity, album, artwork, num_clusters, palette, g
     }
 
 
-def walk_over_images(directory, artists_visited):
-    for _, _, files in os.walk(directory, topdown=False):
+def walk_over_images(directory_to_walk, artists_visited):
+    for _, _, files in os.walk(directory_to_walk, topdown=False):
         for num, name in enumerate(files):
             print(num, name)
             artist_name = name.split("_")[2]
@@ -100,8 +100,8 @@ def walk_over_images(directory, artists_visited):
             # every 50 files
             if num % 5 == 0:
                 print("updating artist ID set...")
-                with open("artists.pkl", "wb") as f:
-                    pkl.dump(artists_visited, f)
+                with open("artists.pkl", "wb") as f_write:
+                    pkl.dump(artists_visited, f_write)
 
 
 if __name__ == "__main__":
