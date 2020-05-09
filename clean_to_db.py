@@ -103,6 +103,9 @@ def walk_over_images(directory_to_walk, artists_visited):
                 with open("artists.pkl", "wb") as f_write:
                     pkl.dump(artists_visited, f_write)
 
+    with open("artists.pkl", "wb") as f_write:  # at end
+        pkl.dump(artists_visited, f_write)
+
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
