@@ -19,5 +19,5 @@ class SpotifyConnection(object):
 
     def get_artist_albums(self, artist_id):
         result = self.sp.artist_albums(
-            artist_id, limit=30, album_type="album", country="CA")
+            artist_id, limit=50, album_type="album", country="CA")
         return result

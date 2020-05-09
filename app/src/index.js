@@ -5,11 +5,11 @@ import $ from "jquery";
 // import Popper from "popper.js";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
-import Album from "./components/album";
+import AlbumGrid from "./components/albumGrid";
 
 $(function () {
   $('[data-toggle="tooltip"]').tooltip();
 });
 
-ReactDOM.render(<Album />, document.getElementById("row"));
+ReactDOM.render(<AlbumGrid />, document.getElementById("container"));
 registerServiceWorker();

@@ -1,17 +1,17 @@
 import React, { Component } from "react";
 import "./album.css";
 import ntc from "./ntc.js";
+import spotify from "./spotify.png";
 
 class Album extends Component {
   state = {
-    name: "Kierkegaard's Waltz",
-    artist: "Jesus Christ",
-    year: "2020",
-    spotifyUrl: "https://open.spotify.com/album/0EaaLMICMb9R4j9tqt7ewv",
-    palette: ["#581c4f", "#31339e", "#c3bad1"],
-    genres: ["Hip-hop", "Folk", "Rock"],
-    artworkUrl:
-      "https://i.scdn.co/image/ab67616d00001e02931d20d076fe021323e63f69",
+    name: this.props.name,
+    artist: this.props.artist,
+    year: this.props.year,
+    spotifyUrl: this.props.spotifyUrl,
+    palette: this.props.palette,
+    genres: this.props.genres,
+    artworkUrl: this.props.artworkUrl,
   };
 
   handleColorClick = (palette_color) => {
@@ -30,16 +30,29 @@ class Album extends Component {
 
   render() {
     return (
-      <div className="col-10 offset-1 d-flex album-holder">
+      <div className="col-12 col-sm-6 col-lg-4 d-flex album-holder">
         <figure className="figure">
-          <img
-            className="mx-auto d-block album-image"
-            src={this.state.artworkUrl}
-            alt={this.formatName()}
-          />
+          <a href={this.state.artworkUrl}>
+            <img
+              className="mx-auto d-block album-image"
+              src={this.state.artworkUrl}
+              alt={this.formatName()}
+            />
+          </a>
           <figcaption className="figure-caption">
-            <h5>{this.formatName()}</h5>
-            <p>
+            <div className="d-flex flex-row align-items-center justify-content-between">
+              <h5 className="d-inline my-1 flex-grow-1 text-truncate">
+                {this.formatName()}
+              </h5>
+              <a className="d-inline" href={this.state.spotifyUrl}>
+                <img
+                  className="spotify-logo d-inline"
+                  alt="Spotify"
+                  src={spotify}
+                ></img>
+              </a>
+            </div>
+            <p className="text-truncate">
               <i>
                 {this.formatArtist()} ({this.state.year})
               </i>

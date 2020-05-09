@@ -16,3 +16,17 @@
 .color-in-bar {
   cursor: pointer;
 }
+
+.spotify-logo {
+  height: 20px;
+  width: 20px;
+  float: right;
+}
+
+.figure-caption {
+  max-width: 250px;
+}
+
+h5 {
+  overflow: hidden;
+}
