@@ -1,1 +1,1 @@
-"# Hexual" 
+# Hexual
