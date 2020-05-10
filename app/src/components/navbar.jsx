@@ -2,15 +2,34 @@ import React, { Component } from "react";
 import "./navbar.css";
 import ColorPanel from "./colorPanel";
 import Collapse from "@kunukn/react-collapse";
+import SearchPanel from "./searchPanel";
 
 class Navbar extends Component {
   state = {
     title: "hexual",
     showColorPanel: false,
+    showSearchPanel: false,
   };
 
   handleColorPanelClick = () => {
-    this.setState({ showColorPanel: !this.state.showColorPanel });
+    this.setState({
+      showSearchPanel: false,
+      showColorPanel: !this.state.showColorPanel,
+    });
+  };
+
+  handleSearchPanelClick = () => {
+    this.setState({
+      showColorPanel: false,
+      showSearchPanel: !this.state.showSearchPanel,
+    });
+  };
+
+  handleBrowseClick = () => {
+    this.setState({
+      showColorPanel: false,
+      showSearchPanel: false,
+    });
   };
 
   render() {
@@ -27,12 +46,25 @@ class Navbar extends Component {
             >
               Palette <span className="sr-only">(current)</span>
             </button>
-            <button className="nav-item nav-link mb-4">Browse</button>
-            <button className="nav-item nav-link mb-4">Search</button>
+            <button
+              className="nav-item nav-link mb-4"
+              onClick={this.handleSearchPanelClick}
+            >
+              Search
+            </button>
+            <button
+              className="nav-item nav-link mb-4"
+              onClick={this.handleBrowseClick}
+            >
+              Browse
+            </button>
           </div>
         </div>
         <Collapse isOpen={this.state.showColorPanel}>
           <ColorPanel />
+        </Collapse>
+        <Collapse isOpen={this.state.showSearchPanel}>
+          <SearchPanel />
         </Collapse>
       </main>
     );

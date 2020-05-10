@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./App.css";
 import Navbar from "./components/navbar";
 import AlbumGrid from "./components/albumGrid";
+import SearchPanel from "./components/searchPanel";
 
 class App extends Component {
   render() {
