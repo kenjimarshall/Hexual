@@ -27,7 +27,7 @@ class ColorPicker extends Component {
           </button>
           <h3 className="display-5">{this.props.picker.name}</h3>
           <div
-            className="color-display"
+            className="color-display mb-2"
             style={{
               background: this.props.picker.color,
             }}

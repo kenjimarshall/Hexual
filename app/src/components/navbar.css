@@ -1,0 +1,17 @@
+.nav-item {
+  background-color: transparent;
+  border: none;
+}
+
+.nav-item:focus {
+  outline: none;
+}
+
+.navbar-nav {
+  min-width: 250px;
+  width: 30%;
+}
+
+.collapse-css-transition {
+  transition: height 280ms cubic-bezier(0.4, 0, 0.2, 1);
+}

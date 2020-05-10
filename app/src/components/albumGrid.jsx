@@ -41,7 +41,7 @@ class AlbumGrid extends Component {
   };
   render() {
     return (
-      <div className="row">
+      <div className="row d-flex justify-content-center">
         {this.state.albums.map((album) => (
           <Album key={album.id} album={album} />
         ))}
