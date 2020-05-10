@@ -43,16 +43,7 @@ class AlbumGrid extends Component {
     return (
       <div className="row">
         {this.state.albums.map((album) => (
-          <Album
-            id={album.id}
-            name={album.name}
-            artist={album.artist}
-            year={album.year}
-            spotifyUrl={album.spotifyUrl}
-            palette={album.palette}
-            genres={album.genres}
-            artworkUrl={album.artworkUrl}
-          />
+          <Album key={album.id} album={album} />
         ))}
       </div>
     );

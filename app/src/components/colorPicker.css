@@ -1,0 +1,19 @@
+.popup {
+  z-index: 1000;
+  position: absolute;
+  top: 180px;
+}
+
+.cover {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+}
+
+.color-display {
+  height: 100px;
+  width: 100px;
+  cursor: pointer;
+}

@@ -1,0 +1,19 @@
+.color-picker-holder {
+  width: 150px;
+}
+
+.hue-holder {
+  height: 20px;
+  width: 150px;
+  position: relative;
+}
+
+.saturation-holder {
+  height: 100px;
+  width: 150px;
+  position: relative;
+}
+
+.text-holder {
+  background-color: white;
+}

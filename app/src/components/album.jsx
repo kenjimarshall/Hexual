@@ -4,24 +4,10 @@ import ntc from "./ntc.js";
 import spotify from "./spotify.png";
 
 class Album extends Component {
-  state = {
-    name: this.props.name,
-    artist: this.props.artist,
-    year: this.props.year,
-    spotifyUrl: this.props.spotifyUrl,
-    palette: this.props.palette,
-    genres: this.props.genres,
-    artworkUrl: this.props.artworkUrl,
-  };
-
   handleColorClick = (palette_color) => {
     const color = palette_color.slice(1);
     var dummy = document.createElement("textarea");
-    // to avoid breaking orgain page when copying more words
-    // cant copy when adding below this code
-    // dummy.style.display = 'none'
     document.body.appendChild(dummy);
-    //Be careful if you use texarea. setAttribute('value', value), which works with "input" does not work with "textarea". – Eduard
     dummy.value = color;
     dummy.select();
     document.execCommand("copy");
@@ -30,21 +16,21 @@ class Album extends Component {
 
   render() {
     return (
-      <div className="col-12 col-sm-6 col-lg-4 d-flex album-holder">
+      <div className="col-12 col-md-6 col-lg-4 d-flex album-holder">
         <figure className="figure">
-          <a href={this.state.artworkUrl}>
+          <a href={this.props.album.artworkUrl}>
             <img
               className="mx-auto d-block album-image"
-              src={this.state.artworkUrl}
+              src={this.props.album.artworkUrl}
               alt={this.formatName()}
             />
           </a>
           <figcaption className="figure-caption">
             <div className="d-flex flex-row align-items-center justify-content-between">
-              <h5 className="d-inline my-1 flex-grow-1 text-truncate">
+              <h6 className="d-inline my-1 flex-grow-1 text-truncate">
                 {this.formatName()}
-              </h5>
-              <a className="d-inline" href={this.state.spotifyUrl}>
+              </h6>
+              <a className="d-inline" href={this.props.album.spotifyUrl}>
                 <img
                   className="spotify-logo d-inline"
                   alt="Spotify"
@@ -52,9 +38,9 @@ class Album extends Component {
                 ></img>
               </a>
             </div>
-            <p className="text-truncate">
+            <p className="text-truncate mt-1">
               <i>
-                {this.formatArtist()} ({this.state.year})
+                {this.formatArtist()} ({this.props.album.year})
               </i>
               <br></br>
               {this.formatGenres()}
@@ -69,17 +55,17 @@ class Album extends Component {
   }
 
   formatName() {
-    const { name } = this.state;
+    const { name } = this.props.album;
     return name === "" ? "Starman" : name;
   }
 
   formatArtist() {
-    const { artist } = this.state;
+    const { artist } = this.props.album;
     return artist === "" ? "Davie Bowie" : artist;
   }
 
   formatGenres() {
-    const { genres } = this.state;
+    const { genres } = this.props.album;
     if (!genres) {
       return "Genres unlisted";
     } else {
@@ -88,7 +74,7 @@ class Album extends Component {
   }
 
   formatPalette() {
-    const { palette } = this.state;
+    const { palette } = this.props.album;
     if (!palette) {
       return <div className="flex-fill"></div>;
     } else {

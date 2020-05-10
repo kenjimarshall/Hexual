@@ -60,8 +60,11 @@ def walk_over_images(directory_to_walk, artists_visited):
 
                         for album in artist_album_search['items']:
                             album_name = album['name']
-                            if album['images']:  # see if artwork is stored
-                                artwork = album['images'][1]['url']
+                            if album['images']:
+                                if len(album['images']) >= 2:  # see if artwork is stored
+                                    artwork = album['images'][1]['url']
+                                else:
+                                    artwork = album['images'][0]['url']
                             else:
                                 print(album_name, " has no artwork available")
                                 continue

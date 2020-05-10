@@ -44,7 +44,7 @@ var ntc = {
   name: function (color) {
     color = color.toUpperCase();
     if (color.length < 3 || color.length > 7)
-      return ["#000000", "Invalid Color: " + color, false];
+      return ["#000000", "Black", false];
     if (color.length % 3 === 0) color = "#" + color;
     if (color.length === 4)
       color =
