@@ -9,7 +9,7 @@ class ColorPanel extends Component {
   nextItemId = 4;
 
   state = {
-    numPickers: 1,
+    numPickers: 4,
     pickers: [
       {
         id: 0,
@@ -35,11 +35,12 @@ class ColorPanel extends Component {
   };
 
   handleDelete = (id) => {
-    if (this.state.pickers.length <= 1) {
+    if (this.state.numPickers <= 1) {
       console.log("One or less colors!");
     } else {
       const pickers = this.state.pickers.filter((p) => p.id !== id);
-      this.setState({ pickers });
+      const numPickers = this.state.numPickers - 1;
+      this.setState({ pickers, numPickers });
     }
   };
 
@@ -55,7 +56,7 @@ class ColorPanel extends Component {
   };
 
   handleCreate = () => {
-    if (this.state.pickers.length >= 4) {
+    if (this.state.numPickers >= 4) {
       console.log("Already have four!");
     } else {
       const pickers = [...this.state.pickers];
@@ -64,7 +65,8 @@ class ColorPanel extends Component {
         color: this.starterColor,
         name: this.starterName,
       });
-      this.setState({ pickers });
+      const numPickers = this.state.numPickers + 1;
+      this.setState({ pickers, numPickers });
     }
   };
 
@@ -92,7 +94,12 @@ class ColorPanel extends Component {
           <button className="btn btn-light mx-3" onClick={this.handleCreate}>
             Add Tone
           </button>
-          <button className="btn btn-primary mx-3">Search!</button>
+          <button
+            className="btn btn-primary mx-3"
+            onClick={() => this.props.onPaletteSearch(this.state.pickers)}
+          >
+            Search!
+          </button>
         </div>
       </div>
     );

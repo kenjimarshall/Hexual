@@ -2,9 +2,12 @@ import React, { Component } from "react";
 import "./album.css";
 import ntc from "./ntc.js";
 import spotify from "./spotify.png";
+import "react-tippy/dist/tippy.css";
+import { Tooltip } from "react-tippy";
 
 class Album extends Component {
   handleColorClick = (palette_color) => {
+    console.log("Copying...");
     const color = palette_color.slice(1);
     var dummy = document.createElement("textarea");
     document.body.appendChild(dummy);
@@ -79,21 +82,25 @@ class Album extends Component {
       return <div className="flex-fill"></div>;
     } else {
       return palette.map((palette_color) => (
-        <div
-          onClick={() => this.handleColorClick(palette_color)}
+        <Tooltip
           className="flex-fill color-in-bar"
-          style={{ background: palette_color }}
-          data-toggle="tooltip"
-          data-placement="right"
-          data-html="true"
-          title={
-            palette_color +
-            " " +
-            ntc.name(palette_color)[1] +
-            "<br>(Click to copy)"
-          }
+          style={{ background: palette_color, cursor: "pointer" }}
           key={palette_color}
-        />
+          position="right"
+          trigger="mouseenter"
+          html={
+            <div>
+              {palette_color + " " + ntc.name(palette_color)[1]}
+              <br></br>
+              (Click to copy)
+            </div>
+          }
+        >
+          <div
+            className="w-100, h-100"
+            onClick={() => this.handleColorClick(palette_color)}
+          ></div>
+        </Tooltip>
       ));
     }
   }

@@ -1,0 +1,4 @@
+.custom-select:focus {
+  border-color: #555555;
+  box-shadow: none;
+}

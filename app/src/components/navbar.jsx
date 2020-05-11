@@ -3,17 +3,19 @@ import "./navbar.css";
 import ColorPanel from "./colorPanel";
 import Collapse from "@kunukn/react-collapse";
 import SearchPanel from "./searchPanel";
+import BrowsePanel from "./browsePanel";
 
 class Navbar extends Component {
   state = {
-    title: "hexual",
     showColorPanel: false,
     showSearchPanel: false,
+    showBrowsePanel: false,
   };
 
   handleColorPanelClick = () => {
     this.setState({
       showSearchPanel: false,
+      showBrowsePanel: false,
       showColorPanel: !this.state.showColorPanel,
     });
   };
@@ -21,6 +23,7 @@ class Navbar extends Component {
   handleSearchPanelClick = () => {
     this.setState({
       showColorPanel: false,
+      showBrowsePanel: false,
       showSearchPanel: !this.state.showSearchPanel,
     });
   };
@@ -29,6 +32,7 @@ class Navbar extends Component {
     this.setState({
       showColorPanel: false,
       showSearchPanel: false,
+      showBrowsePanel: !this.state.showBrowsePanel,
     });
   };
 
@@ -61,10 +65,23 @@ class Navbar extends Component {
           </div>
         </div>
         <Collapse isOpen={this.state.showColorPanel}>
-          <ColorPanel />
+          <ColorPanel
+            onPaletteSearch={(pickers) => this.props.onPaletteSearch(pickers)}
+          />
         </Collapse>
         <Collapse isOpen={this.state.showSearchPanel}>
-          <SearchPanel />
+          <SearchPanel
+            onSearch={(searchType, paletteSize, search) =>
+              this.props.onSearch(searchType, paletteSize, search)
+            }
+          />
+        </Collapse>
+        <Collapse isOpen={this.state.showBrowsePanel}>
+          <BrowsePanel
+            onBrowse={(paletteSize, genre) =>
+              this.props.onBrowse(paletteSize, genre)
+            }
+          />
         </Collapse>
       </main>
     );
