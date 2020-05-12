@@ -32,6 +32,90 @@ def generate_scheme(artist, popularity, album, artwork, num_clusters, palette, g
     }
 
 
+def add_by_artist_name(artist_name, artists_visited):
+    artist_search = SPOT.search_artist(artist_name)
+    if "error" in artist_search:
+        return
+    for artist in artist_search['artists']['items']:
+        artist_id = artist['id']
+        if artist_id in artists_visited:
+            print(artist['name'], " already in set")
+            continue
+        else:
+
+            artists_visited.add(artist_id)
+
+            artist_name_clean = artist['name']
+            print("ARTIST: ", artist_name_clean)
+            popularity = artist['popularity']
+            genres = artist['genres']
+            artist_album_search = SPOT.get_artist_albums(artist_id)
+
+            for album in artist_album_search['items']:
+                album_name = album['name']
+                if album['images']:
+                    if len(album['images']) >= 2:  # see if artwork is stored
+                        artwork = album['images'][1]['url']
+                    else:
+                        artwork = album['images'][0]['url']
+                else:
+                    print(album_name, " has no artwork available")
+                    continue
+                year = album['release_date'].split("-")[0]
+                spotify_url = album['external_urls']['spotify']
+
+                palettes = CLUSTERER.fit_from_url(artwork)
+                hex_palette = palettes[0]
+                lab_palette = palettes[1]
+                while lab_palette.shape[0] < 4:
+                    # duplicate first cluster
+                    print("Missing clusters.")
+                    print(lab_palette.shape)
+                    lab_palette = np.vstack((lab_palette[0:], lab_palette))
+                    print(lab_palette.shape)
+
+                lab_for_mongo = [
+                    {
+                        "l": lab_palette[0, 0],
+                        "a": lab_palette[0, 1],
+                        "b": lab_palette[0, 2]
+                    },
+                    {
+                        "l": lab_palette[1, 0],
+                        "a": lab_palette[1, 1],
+                        "b": lab_palette[1, 2]
+                    },
+                    {
+                        "l": lab_palette[2, 0],
+                        "a": lab_palette[2, 1],
+                        "b": lab_palette[2, 2]
+                    },
+                    {
+                        "l": lab_palette[3, 0],
+                        "a": lab_palette[3, 1],
+                        "b": lab_palette[3, 2]
+                    }
+                ]
+
+                print("ALBUM: ", album_name, year, hex_palette)
+
+                # insert entry
+                MONGO_DB.albums.insert_one(
+                    {"artist": artist_name_clean,
+                        "popularity": popularity,
+                        "album": album_name,
+                        "artwork": artwork,
+                        "spotify_url": spotify_url,
+                        "genres": genres,
+                        "year": year,
+                        "lab": lab_for_mongo,
+                        "palette": hex_palette
+                     }
+                )
+                with open("artists.pkl", "wb") as f_write:
+                    pkl.dump(artists_visited, f_write)
+
+
 def walk_over_images(directory_to_walk, artists_visited):
     for _, _, files in os.walk(directory_to_walk, topdown=False):
         for num, name in enumerate(files):
@@ -39,86 +123,10 @@ def walk_over_images(directory_to_walk, artists_visited):
             artist_name = name.split("_")[2]
             artist_name = " ".join(artist_name.split("-"))
             if artist_name:
-                artist_search = SPOT.search_artist(artist_name)
-                if "error" in artist_search:
-                    continue
-                for artist in artist_search['artists']['items']:
-                    artist_id = artist['id']
-                    if artist_id in artists_visited:
-                        print(artist['name'], " already in set")
-                        continue
-                    else:
-
-                        artists_visited.add(artist_id)
-
-                        artist_name_clean = artist['name']
-                        print("ARTIST: ", artist_name_clean)
-                        popularity = artist['popularity']
-                        genres = artist['genres']
-                        artist_album_search = SPOT.get_artist_albums(artist_id)
-
-                        for album in artist_album_search['items']:
-                            album_name = album['name']
-                            if album['images']:
-                                if len(album['images']) >= 2:  # see if artwork is stored
-                                    artwork = album['images'][1]['url']
-                                else:
-                                    artwork = album['images'][0]['url']
-                            else:
-                                print(album_name, " has no artwork available")
-                                continue
-                            year = album['release_date'].split("-")[0]
-                            spotify_url = album['external_urls']['spotify']
-
-                            palettes = CLUSTERER.fit_from_url(artwork)
-                            hex_palette = palettes[0]
-                            lab_palette = palettes[1]
-                            lab_for_mongo = [
-                                {
-                                    "l": lab_palette[0, 0],
-                                    "a": lab_palette[0, 1],
-                                    "b": lab_palette[0, 2]
-                                },
-                                {
-                                    "l": lab_palette[1, 0],
-                                    "a": lab_palette[1, 1],
-                                    "b": lab_palette[1, 2]
-                                },
-                                {
-                                    "l": lab_palette[2, 0],
-                                    "a": lab_palette[2, 1],
-                                    "b": lab_palette[2, 2]
-                                },
-                                {
-                                    "l": lab_palette[3, 0],
-                                    "a": lab_palette[3, 1],
-                                    "b": lab_palette[3, 2]
-                                }
-                            ]
-
-                            print("ALBUM: ", album_name, year, hex_palette)
-
-                            # insert entry
-                            MONGO_DB.albums.insert_one(
-                                {"artist": artist_name_clean,
-                                 "popularity": popularity,
-                                 "album": album_name,
-                                 "artwork": artwork,
-                                 "spotify_url": spotify_url,
-                                 "genres": genres,
-                                 "year": year,
-                                 "lab": lab_for_mongo,
-                                 "palette": hex_palette
-                                 }
-                            )
-
+                add_by_artist_name(artist_name, artists_visited)
             # every 50 files
-            if num % 5 == 0:
-                print("updating artist ID set...")
-                with open("artists.pkl", "wb") as f_write:
-                    pkl.dump(artists_visited, f_write)
 
-    with open("artists.pkl", "wb") as f_write:  # at end
+    with open("artists.pkl", "wb") as f_write:  # at end to make sure
         pkl.dump(artists_visited, f_write)
 
 

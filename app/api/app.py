@@ -1,12 +1,15 @@
 from flask import Flask, request, Response, json
 from flask_pymongo import PyMongo
 from flask_bootstrap import Bootstrap
+from color_manager import ColorRequestManager
+import itertools
+
 
 app = Flask(__name__)
 Bootstrap(app)
 app.config["MONGO_URI"] = "mongodb+srv://kenji:alexachung#1@hexualdb-yhauo.mongodb.net/test?retryWrites=true&w=majority"
 mongo = PyMongo(app)
-db = mongo.cx.data  # get to db via MongoClient
+db = mongo.cx.music  # get to db via MongoClient
 NEXT_ID = 0
 
 
@@ -16,14 +19,14 @@ def generate_album(doc, palette_size):
     global NEXT_ID
     album["id"] = NEXT_ID
     NEXT_ID += 1
-    print(doc)
+    print(type(palette_size))
 
     album["name"] = doc["album"]
     album["artist"] = doc["artist"]
     album["year"] = doc["year"]
     album["genres"] = doc["genres"]
     album["spotifyUrl"] = doc["spotify_url"]
-    album["palette"] = doc["palettes"][palette_size]
+    album["palette"] = doc["palette"][0:palette_size]
     album["artworkUrl"] = doc["artwork"]
     album["popularity"] = doc["popularity"]
 
@@ -32,7 +35,7 @@ def generate_album(doc, palette_size):
 
 def cursor_to_album_components(palette_size, cursor, albums_already_seen=None):
     albums = []
-    if albums_already_seen == None:
+    if albums_already_seen is None:
         album_representations = set()
     else:
         album_representations = albums_already_seen
@@ -76,19 +79,21 @@ def aggregate():
 
 @app.route("/palette_search", methods=["POST"])
 def palette_search():
-    complete_filter = request.json["filter"]
-    partial_filter = request.json["partialFilter"]
+    colors = request.json["colors"]
     palette_size = request.json["paletteSize"]
-    print(complete_filter, partial_filter, palette_size)
+    print(colors, palette_size)
+
     albums_already_seen = set()
     response = {
         "data": [],
         "titles": []
     }
-    perfect_match_response = cursor_to_album_components(palette_size,
-                                                        db.albums.find(
-                                                            complete_filter),
-                                                        albums_already_seen=albums_already_seen)
+
+    perfect_match_api_request = ColorRequestManager.hex_list_to_query(colors)
+    perfect_match_cursor = db.albums.find(perfect_match_api_request)
+    perfect_match_response = cursor_to_album_components(
+        palette_size, perfect_match_cursor, albums_already_seen=albums_already_seen)
+
     print(perfect_match_response)
     if len(perfect_match_response) == 0:
         response["data"].append([])
@@ -97,20 +102,25 @@ def palette_search():
         response["data"].append(perfect_match_response)
         response["titles"].append("Perfect Matches")
 
-    if partial_filter != None:
+    if palette_size > 1:
         print("finding partial matches...")
-        partial_match_response = cursor_to_album_components(palette_size,
-                                                            db.albums.find(
-                                                                partial_filter),
-                                                            albums_already_seen=albums_already_seen)
-        print(partial_match_response)
+        subsets = list(itertools.combinations(colors, palette_size-1))
+        partial_match_response = []
+        for subset in subsets:
+            subset_list = list(subset)
+            subset_list.append(subset[-1])  # duplicate last color
+            partial_match_api_request = ColorRequestManager.hex_list_to_query(
+                subset_list)
+            partial_match_cursor = db.albums.find(partial_match_api_request)
+            partial_match_response.extend(cursor_to_album_components(
+                palette_size, partial_match_cursor, albums_already_seen=albums_already_seen))
+            print(partial_match_response)
 
+        response["data"].append(partial_match_response)
         if len(partial_match_response) == 0:
-            response["data"].append([])
             response["titles"].append("No partial matches :(")
         else:
-            response["data"].append(partial_match_response)
             response["titles"].append("Partial Matches")
 
     print(response)
-    return response
+    return Response(json.dumps(response), mimetype='application/json')

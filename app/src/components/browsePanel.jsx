@@ -4,11 +4,11 @@ import "./browsePanel.css";
 class BrowsePanel extends Component {
   state = {
     genre: "All Genres",
-    paletteSize: "four",
+    paletteSize: 4,
   };
 
   handlePaletteChange = ({ target }) => {
-    this.setState({ paletteSize: target.value });
+    this.setState({ paletteSize: parseInt(target.value) });
   };
 
   handleGenreChange = ({ target }) => {
@@ -28,12 +28,12 @@ class BrowsePanel extends Component {
                 autoComplete="off"
                 onChange={this.handlePaletteChange}
               >
-                <option defaultValue value="four">
+                <option defaultValue value={4}>
                   4 Colours
                 </option>
-                <option value="three">3 Colours</option>
-                <option value="two">2 Colours</option>
-                <option value="one">1 Colour</option>
+                <option value={3}>3 Colours</option>
+                <option value={2}>2 Colours</option>
+                <option value={1}>1 Colour</option>
               </select>
             </div>
             <div className="col-auto my-1">

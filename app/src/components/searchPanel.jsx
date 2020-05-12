@@ -6,7 +6,7 @@ class SearchPanel extends Component {
   state = {
     searchType: "artist",
     search: null,
-    paletteSize: "four",
+    paletteSize: 4,
   };
 
   handleArtistSelect = () => {
@@ -22,7 +22,7 @@ class SearchPanel extends Component {
   };
 
   handlePaletteChange = ({ target }) => {
-    this.setState({ [target.name]: target.value });
+    this.setState({ paletteSize: parseInt(target.value) });
   };
 
   render() {
@@ -66,12 +66,12 @@ class SearchPanel extends Component {
               autoComplete="off"
               onChange={this.handlePaletteChange}
             >
-              <option defaultValue value="four">
+              <option defaultValue value={4}>
                 4 Colours
               </option>
-              <option value="three">3 Colours</option>
-              <option value="two">2 Colours</option>
-              <option value="one">1 Colour</option>
+              <option value={3}>3 Colours</option>
+              <option value={2}>2 Colours</option>
+              <option value={1}>1 Colour</option>
             </select>
             <div className="form-check form-check-inline">
               <input

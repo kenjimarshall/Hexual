@@ -24,7 +24,7 @@ class PaletteGenerator(object):
             index_weight_pairs, key=lambda x: x[1])
         sorted_indices = [pair[0] for pair in sorted_index_weight_pairs]
         lab_palette = lab_palette[sorted_indices]
-        hex_palette = self.vec_lab_to_hex(self.km.cluster_centers_)
+        hex_palette = self.vec_lab_to_hex(lab_palette)
         return hex_palette, lab_palette
 
     def vec_rgb_to_hex(self, rgb):

@@ -12,74 +12,21 @@ class App extends Component {
   gridIndices = 0;
 
   handlePaletteSearch = (pickers) => {
-    let filter, partialFilter, paletteSize;
-    if (pickers.length === 1) {
-      paletteSize = "one";
-      filter = {
-        "palettes.one": pickers.map((picker) => picker.color),
-      };
-      partialFilter = null;
-    } else if (pickers.length === 2) {
-      paletteSize = "two";
-      filter = {
-        "palettes.two": pickers.map((picker) => picker.color),
-      };
-      partialFilter = {
-        $or: [
-          { "palettes.two": { $all: [pickers[0].color] } },
-          { "palettes.two": { $all: [pickers[1].color] } },
-        ],
-      };
-    } else if (pickers.length === 3) {
-      paletteSize = "three";
-      filter = {
-        "palettes.three": pickers.map((picker) => picker.color),
-      };
-      partialFilter = {
-        $or: [
-          { "palettes.three": { $all: [pickers[0].color, pickers[1].color] } },
-          { "palettes.three": { $all: [pickers[0].color, pickers[2].color] } },
-          { "palettes.three": { $all: [pickers[1].color, pickers[2].color] } },
-        ],
-      };
-    } else if (pickers.length === 4) {
-      paletteSize = "four";
-      filter = {
-        "palettes.four": pickers.map((picker) => picker.color),
-      };
-      partialFilter = {
-        $or: [
-          {
-            "palettes.four": {
-              $all: [pickers[0].color, pickers[1].color, pickers[2].color],
-            },
-          },
-          {
-            "palettes.four": {
-              $all: [pickers[0].color, pickers[1].color, pickers[3].color],
-            },
-          },
-          {
-            "palettes.four": {
-              $all: [pickers[0].color, pickers[2].color, pickers[3].color],
-            },
-          },
-          {
-            "palettes.four": {
-              $all: [pickers[1].color, pickers[2].color, pickers[3].color],
-            },
-          },
-        ],
-      };
+    let paletteSize;
+    // Check for duplicates
+    const colors = pickers.map((picker) => picker.color);
+    if (new Set(colors).size !== colors.length) {
+      alert("Must query unique colors in your palette!");
+      return;
     }
-    this.paletteSearch(paletteSize, filter, partialFilter);
+    paletteSize = pickers.length;
+    this.paletteSearch(paletteSize, colors);
   };
 
-  paletteSearch = (paletteSize, filter, partialFilter) => {
+  paletteSearch = (paletteSize, colors) => {
     let apiRequest = {
       paletteSize: paletteSize,
-      filter: filter,
-      partialFilter: partialFilter,
+      colors: colors,
     };
     console.log(apiRequest);
 
