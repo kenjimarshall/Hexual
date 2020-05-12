@@ -3,24 +3,22 @@ import argparse
 import base64
 import requests
 import pickle as pkl
+import numpy as np
 from mongo_client import Connect
 from spotify_client import SpotifyConnection
 from palette_generator import PaletteGenerator
 
 SPOT = SpotifyConnection()
 MONGO_CLIENT = Connect.get_connection()
-MONGO_DB = MONGO_CLIENT.data
-PALETTE_ONE_CLUSTER = PaletteGenerator(n_clusters=1)
-PALETTE_TWO_CLUSTERS = PaletteGenerator(n_clusters=2)
-PALETTE_THREE_CLUSTERS = PaletteGenerator(n_clusters=3)
-PALETTE_FOUR_CLUSTERS = PaletteGenerator(n_clusters=4)
+MONGO_DB = MONGO_CLIENT.music
+CLUSTERER = PaletteGenerator()
 
 
 def get_as_base64(url):
     return base64.b64encode(requests.get(url).content)
 
 
-def generate_scheme(artist, popularity, album, artwork, num_clusters, palette, genres, year):
+def generate_scheme(artist, popularity, album, artwork, num_clusters, palette, genres, year, lab_palette):
     return {
         'artist': artist,
         'popularity': popularity,
@@ -28,6 +26,7 @@ def generate_scheme(artist, popularity, album, artwork, num_clusters, palette, g
         'artwork': artwork,
         'num_clusters': num_clusters,
         'palette': palette,
+        'lab_palette': lab_palette,
         'genres': genres,
         'year': year
     }
@@ -71,16 +70,33 @@ def walk_over_images(directory_to_walk, artists_visited):
                             year = album['release_date'].split("-")[0]
                             spotify_url = album['external_urls']['spotify']
 
-                            palettes = []
+                            palettes = CLUSTERER.fit_from_url(artwork)
+                            hex_palette = palettes[0]
+                            lab_palette = palettes[1]
+                            lab_for_mongo = [
+                                {
+                                    "l": lab_palette[0, 0],
+                                    "a": lab_palette[0, 1],
+                                    "b": lab_palette[0, 2]
+                                },
+                                {
+                                    "l": lab_palette[1, 0],
+                                    "a": lab_palette[1, 1],
+                                    "b": lab_palette[1, 2]
+                                },
+                                {
+                                    "l": lab_palette[2, 0],
+                                    "a": lab_palette[2, 1],
+                                    "b": lab_palette[2, 2]
+                                },
+                                {
+                                    "l": lab_palette[3, 0],
+                                    "a": lab_palette[3, 1],
+                                    "b": lab_palette[3, 2]
+                                }
+                            ]
 
-                            # generate clusters
-                            for clusterer in [PALETTE_ONE_CLUSTER, PALETTE_TWO_CLUSTERS,
-                                              PALETTE_THREE_CLUSTERS, PALETTE_FOUR_CLUSTERS]:
-
-                                palettes.append(
-                                    clusterer.fit_from_url(artwork))
-
-                            print("ALBUM: ", album_name, year, palettes[3])
+                            print("ALBUM: ", album_name, year, hex_palette)
 
                             # insert entry
                             MONGO_DB.albums.insert_one(
@@ -91,12 +107,8 @@ def walk_over_images(directory_to_walk, artists_visited):
                                  "spotify_url": spotify_url,
                                  "genres": genres,
                                  "year": year,
-                                 "palettes": {
-                                     "one": palettes[0],
-                                     "two": palettes[1],
-                                     "three": palettes[2],
-                                     "four": palettes[3]
-                                 }
+                                 "lab": lab_for_mongo,
+                                 "palette": hex_palette
                                  }
                             )
 
