@@ -21,7 +21,7 @@ class PaletteGenerator(object):
         lab_palette = self.km.cluster_centers_
         index_weight_pairs = list(Counter(self.km.labels_).items())
         sorted_index_weight_pairs = sorted(
-            index_weight_pairs, key=lambda x: x[1])
+            index_weight_pairs, key=lambda x: x[1], reverse=True)
         sorted_indices = [pair[0] for pair in sorted_index_weight_pairs]
         lab_palette = lab_palette[sorted_indices]
         hex_palette = self.vec_lab_to_hex(lab_palette)

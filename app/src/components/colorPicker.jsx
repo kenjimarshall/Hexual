@@ -18,14 +18,14 @@ class ColorPicker extends Component {
   render() {
     return (
       <React.Fragment>
-        <div className="col-12 col-sm-6 col-lg-3 d-flex flex-column align-items-center px-0">
+        <div className="col-12 col-sm-6 col-lg-3 d-flex flex-column align-items-center px-0 text-center">
           <button
             className="btn btn-light"
             onClick={() => this.props.onDelete(this.props.picker.id)}
           >
             X
           </button>
-          <h3 className="display-5">{this.props.picker.name}</h3>
+          <h5 className="text-truncate">{this.props.picker.name}</h5>
           <div
             className="color-display mb-2"
             style={{
