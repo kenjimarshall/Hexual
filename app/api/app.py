@@ -2,6 +2,7 @@ from flask import Flask, request, Response, json
 from flask_pymongo import PyMongo
 from flask_bootstrap import Bootstrap
 from color_manager import ColorRequestManager
+from cluster_manager import ClusterManager
 import itertools
 
 
@@ -10,6 +11,7 @@ Bootstrap(app)
 app.config["MONGO_URI"] = "mongodb+srv://kenji:alexachung#1@hexualdb-yhauo.mongodb.net/test?retryWrites=true&w=majority"
 mongo = PyMongo(app)
 db = mongo.cx.music  # get to db via MongoClient
+clusterer = ClusterManager()
 NEXT_ID = 0
 
 
@@ -19,7 +21,6 @@ def generate_album(doc, palette_size):
     global NEXT_ID
     album["id"] = NEXT_ID
     NEXT_ID += 1
-    print(type(palette_size))
 
     album["name"] = doc["album"]
     album["artist"] = doc["artist"]
@@ -53,6 +54,15 @@ def cursor_to_album_components(palette_size, cursor, albums_already_seen=None):
                 albums.append(generate_album(doc, palette_size))
 
     return albums
+
+
+@app.route("/image", methods=["POST"])
+def image():
+    image_data = request.get_data()
+    palette = clusterer.fit_from_bytes(image_data)
+    return {
+        "data": palette
+    }
 
 
 @app.route("/search", methods=["POST"])

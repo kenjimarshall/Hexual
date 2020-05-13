@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import ColorPicker from "./colorPicker";
 import ntc from "./ntc";
 import "./colorPanel.css";
+import $ from "jquery";
 
 class ColorPanel extends Component {
   starterColor = "#005b96";
@@ -55,6 +56,27 @@ class ColorPanel extends Component {
     }
   };
 
+  handleImageUpload = ({ target }) => {
+    const image = target.files[0];
+    fetch("/image", {
+      method: "POST",
+      body: image,
+    }).then((res) => {
+      res.json().then((data) => {
+        const colors = data["data"];
+        const pickers = [];
+        for (let i = 0; i < 4; i++) {
+          pickers.push({
+            id: this.nextItemId++,
+            color: colors[i],
+            name: ntc.name(colors[i])[1],
+          });
+        }
+        this.setState({ pickers, numPickers: 4 });
+      });
+    });
+  };
+
   render() {
     return (
       <div className="row d-flex justify-content-center mb-5">
@@ -75,20 +97,40 @@ class ColorPanel extends Component {
             ></div>
           ))}
         </div>
-        <div className="col-12 d-flex justify-content-center mt-3 panel-buttons">
-          <button className="btn btn-light mx-3" onClick={this.handleCreate}>
-            Add Tone
-          </button>
-          <button
-            className="btn btn-primary mx-3"
-            onClick={() => this.props.onPaletteSearch(this.state.pickers)}
-          >
-            Search!
-          </button>
+        <div className="col-12 d-flex justify-content-center mt-3">
+          <div className="form-group text-center align-items-center">
+            <button
+              className="btn btn-light mx-3 mb-2"
+              onClick={this.handleCreate}
+            >
+              Add Tone
+            </button>
+            <button
+              className="btn btn-primary mx-3 mb-2"
+              onClick={() => this.props.onPaletteSearch(this.state.pickers)}
+            >
+              Search!
+            </button>
+            <input
+              type="file"
+              accept="image/*"
+              id="file"
+              multiple={false}
+              className="form-control-file file-input btn btn-light mx-3 mb-2"
+              onChange={(obj) => this.handleImageUpload(obj)}
+            ></input>
+          </div>
         </div>
       </div>
     );
   }
 }
+
+$(function () {
+  $("#file").on("click touchstart", function () {
+    console.log("Resetting file");
+    $(this).val("");
+  });
+});
 
 export default ColorPanel;

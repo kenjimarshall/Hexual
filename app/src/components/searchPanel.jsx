@@ -26,7 +26,6 @@ class SearchPanel extends Component {
   };
 
   render() {
-    console.log("Search Panel Rendered");
     return (
       <div className="col-12 d-flex justify-content-center">
         <form>

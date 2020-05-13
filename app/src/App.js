@@ -95,7 +95,6 @@ class App extends Component {
 
   handleSearch = (searchType, paletteSize, search) => {
     this.resetAlbums();
-    console.log("Searching");
     let filter;
     if (searchType === "artist") {
       filter = { artist: search };

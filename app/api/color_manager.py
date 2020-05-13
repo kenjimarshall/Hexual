@@ -34,7 +34,6 @@ class ColorRequestManager(object):
                 )
             query["$and"].append(or_subdict)
 
-        print(query)
         return query
 
     @staticmethod
