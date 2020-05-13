@@ -30,7 +30,7 @@ class Album extends Component {
           </a>
           <figcaption className="figure-caption">
             <div className="d-flex flex-row align-items-center justify-content-between">
-              <h6 className="d-inline my-1 flex-grow-1 text-truncate">
+              <h6 className="d-inline my-1 pb-1 flex-grow-1 text-truncate">
                 {this.formatName()}
               </h6>
               <a className="d-inline" href={this.props.album.spotifyUrl}>

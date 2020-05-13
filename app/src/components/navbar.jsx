@@ -4,6 +4,7 @@ import ColorPanel from "./colorPanel";
 import Collapse from "@kunukn/react-collapse";
 import SearchPanel from "./searchPanel";
 import BrowsePanel from "./browsePanel";
+import $ from "jquery";
 
 class Navbar extends Component {
   state = {
@@ -13,6 +14,9 @@ class Navbar extends Component {
   };
 
   handleColorPanelClick = () => {
+    $("#browse-btn").removeClass("visible");
+    $("#search-btn").removeClass("visible");
+    $("#palette-btn").toggleClass("visible");
     this.setState({
       showSearchPanel: false,
       showBrowsePanel: false,
@@ -21,6 +25,9 @@ class Navbar extends Component {
   };
 
   handleSearchPanelClick = () => {
+    $("#browse-btn").removeClass("visible");
+    $("#palette-btn").removeClass("visible");
+    $("#search-btn").toggleClass("visible");
     this.setState({
       showColorPanel: false,
       showBrowsePanel: false,
@@ -29,6 +36,9 @@ class Navbar extends Component {
   };
 
   handleBrowseClick = () => {
+    $("#search-btn").removeClass("visible");
+    $("#palette-btn").removeClass("visible");
+    $("#browse-btn").toggleClass("visible");
     this.setState({
       showColorPanel: false,
       showSearchPanel: false,
@@ -46,17 +56,20 @@ class Navbar extends Component {
           <div className="col-12 d-flex justify-content-center">
             <button
               className="nav-item nav-link mb-4"
+              id="palette-btn"
               onClick={this.handleColorPanelClick}
             >
               Palette <span className="sr-only">(current)</span>
             </button>
             <button
               className="nav-item nav-link mb-4"
+              id="search-btn"
               onClick={this.handleSearchPanelClick}
             >
               Search
             </button>
             <button
+              id="browse-btn"
               className="nav-item nav-link mb-4"
               onClick={this.handleBrowseClick}
             >
@@ -87,5 +100,11 @@ class Navbar extends Component {
     );
   }
 }
+
+$(function () {
+  $(".btn").mouseup(function () {
+    $(this).blur();
+  });
+});
 
 export default Navbar;

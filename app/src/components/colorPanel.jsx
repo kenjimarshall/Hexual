@@ -4,30 +4,15 @@ import ntc from "./ntc";
 import "./colorPanel.css";
 
 class ColorPanel extends Component {
-  starterColor = "#7eabc9";
-  starterName = "Glacier";
-  nextItemId = 4;
+  starterColor = "#005b96";
+  starterName = "Bahama Blue";
+  nextItemId = 1;
 
   state = {
-    numPickers: 4,
+    numPickers: 1,
     pickers: [
       {
         id: 0,
-        color: this.starterColor,
-        name: this.starterName,
-      },
-      {
-        id: 1,
-        color: this.starterColor,
-        name: this.starterName,
-      },
-      {
-        id: 2,
-        color: this.starterColor,
-        name: this.starterName,
-      },
-      {
-        id: 3,
         color: this.starterColor,
         name: this.starterName,
       },

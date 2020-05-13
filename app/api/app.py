@@ -73,7 +73,6 @@ def aggregate():
         cursor = db.albums.aggregate(
             [{"$match": aggregate_filter}, {"$sample": {"size": 50}}])
     response = cursor_to_album_components(palette_size, cursor)
-    print(response)
     return Response(json.dumps(response), mimetype='application/json')
 
 
@@ -81,7 +80,6 @@ def aggregate():
 def palette_search():
     colors = request.json["colors"]
     palette_size = request.json["paletteSize"]
-    print(colors, palette_size)
 
     albums_already_seen = set()
     response = {
@@ -94,16 +92,14 @@ def palette_search():
     perfect_match_response = cursor_to_album_components(
         palette_size, perfect_match_cursor, albums_already_seen=albums_already_seen)
 
-    print(perfect_match_response)
     if len(perfect_match_response) == 0:
         response["data"].append([])
-        response["titles"].append("No perfect matches :(")
+        response["titles"].append("No Perfect Matches :(")
     else:
         response["data"].append(perfect_match_response)
         response["titles"].append("Perfect Matches")
 
     if palette_size > 1:
-        print("finding partial matches...")
         subsets = list(itertools.combinations(colors, palette_size-1))
         partial_match_response = []
         for subset in subsets:
@@ -114,13 +110,11 @@ def palette_search():
             partial_match_cursor = db.albums.find(partial_match_api_request)
             partial_match_response.extend(cursor_to_album_components(
                 palette_size, partial_match_cursor, albums_already_seen=albums_already_seen))
-            print(partial_match_response)
 
         response["data"].append(partial_match_response)
         if len(partial_match_response) == 0:
-            response["titles"].append("No partial matches :(")
+            response["titles"].append("No Partial Matches :(")
         else:
             response["titles"].append("Partial Matches")
 
-    print(response)
     return Response(json.dumps(response), mimetype='application/json')

@@ -1,10 +1,20 @@
 .nav-item {
   background-color: transparent;
   border: none;
+  color: #797979;
+}
+
+.nav-item:hover {
+  color: black;
 }
 
 .nav-item:focus {
   outline: none;
+}
+
+.visible {
+  font-weight: bold;
+  color: black;
 }
 
 .navbar-nav {

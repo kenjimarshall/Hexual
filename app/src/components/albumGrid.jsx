@@ -6,7 +6,7 @@ class AlbumGrid extends Component {
     return (
       <div className="row d-flex justify-content-center">
         <div className="col-12 text-center mb-4">
-          <h1 className="display-4">{this.formatTitle()}</h1>
+          <h1>{this.formatTitle()}</h1>
         </div>
         {this.props.albums.map((album) => (
           <Album key={album.id} album={album} />

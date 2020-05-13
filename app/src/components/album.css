@@ -3,6 +3,10 @@
   height: 250px;
 }
 
+.album-image:hover {
+  box-shadow: 5px 5px 10px black;
+}
+
 .album-holder {
   justify-content: center;
 }
