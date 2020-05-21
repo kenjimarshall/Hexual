@@ -120,13 +120,17 @@ def walk_over_images(directory_to_walk, artists_visited):
     for _, _, files in os.walk(directory_to_walk, topdown=False):
         for num, name in enumerate(files):
             print(num, name)
-            artist_name = name.split("_")[2]
+            artist_name_arr = name.split("_")
+            if len(artist_name_arr) >= 3:
+                artist_name = artist_name_arr[2]
+            else:
+                print("Unfamiliar title format. Skipping...")
+                continue
             artist_name = " ".join(artist_name.split("-"))
             if artist_name:
                 add_by_artist_name(artist_name, artists_visited)
-            # every 50 files
 
-    with open("artists.pkl", "wb") as f_write:  # at end to make sure
+    with open("artists.pkl", "wb") as f_write:
         pkl.dump(artists_visited, f_write)
 
 
