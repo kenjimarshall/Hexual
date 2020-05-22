@@ -68,7 +68,9 @@ def image():
 @app.route("/search", methods=["POST"])
 def search():
     palette_size = request.json['paletteSize']
-    cursor = db.albums.find(request.json["filter"])
+    cursor = db.albums.find(request.json["filter"], {
+                            'score': {'$meta': 'textScore'}})
+    cursor.sort([('score', {'$meta': 'textScore'})])
     response = cursor_to_album_components(palette_size, cursor)
     return Response(json.dumps(response), mimetype='application/json')
 
@@ -78,10 +80,10 @@ def aggregate():
     aggregate_filter = request.json["filter"]
     palette_size = request.json['paletteSize']
     if aggregate_filter == None:
-        cursor = db.albums.aggregate([{"$sample": {"size": 50}}])
+        cursor = db.albums.aggregate([{"$sample": {"size": 1000}}])
     else:
         cursor = db.albums.aggregate(
-            [{"$match": aggregate_filter}, {"$sample": {"size": 50}}])
+            [{"$match": aggregate_filter}, {"$sample": {"size": 1000}}])
     response = cursor_to_album_components(palette_size, cursor)
     return Response(json.dumps(response), mimetype='application/json')
 

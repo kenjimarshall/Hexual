@@ -96,15 +96,28 @@ class App extends Component {
   handleSearch = (searchType, paletteSize, search) => {
     this.resetAlbums();
     let filter;
+    let albumSearch;
     if (searchType === "artist") {
-      filter = { artist: search };
+      albumSearch = false;
+      filter = {
+        $text: {
+          $search: search,
+        },
+      };
     } else if (searchType === "album") {
-      filter = { album: search };
+      albumSearch = true;
+      filter = {
+        album: {
+          $regex: "^" + search,
+          $options: "i",
+        },
+      };
     }
-    this.search(filter, paletteSize, search);
+    console.log(filter);
+    this.search(filter, paletteSize, albumSearch);
   };
 
-  search = (filter, paletteSize) => {
+  search = (filter, paletteSize, albumSearch) => {
     let apiRequest = {
       filter: filter,
       paletteSize: paletteSize,
@@ -118,6 +131,9 @@ class App extends Component {
         }),
       }).then((res) => {
         res.json().then((data) => {
+          if (albumSearch) {
+            data = this.sortByPopularity(data);
+          }
           this.setState({ albumGrids: [data], gridTitles: [null] });
         });
       })
