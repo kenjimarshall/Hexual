@@ -114,7 +114,6 @@ class SearchPanel extends Component {
 
 $(function () {
   $("select").on("change", function () {
-    console.log("Selected!");
     $(this).blur();
   });
 });

@@ -47,11 +47,9 @@ class App extends Component {
         }),
       }).then((res) => {
         res.json().then((data) => {
-          console.log(data);
           let albumGrids = data.data.map((albumGrid) =>
             this.sortByPopularity(albumGrid)
           );
-          // data = this.sortByPopularity(data);
           this.setState({ albumGrids: albumGrids, gridTitles: data.titles });
         });
       })
@@ -112,7 +110,6 @@ class App extends Component {
         },
       };
     }
-    console.log(filter);
     this.search(filter, paletteSize, albumSearch);
   };
 
@@ -140,7 +137,6 @@ class App extends Component {
   };
 
   sortByPopularity = (data) => {
-    console.log(data);
     return data.sort(function (a, b) {
       var x = a["popularity"];
       var y = b["popularity"];

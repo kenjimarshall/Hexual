@@ -7,7 +7,6 @@ import { Tooltip } from "react-tippy";
 
 class Album extends Component {
   handleColorClick = (palette_color) => {
-    console.log("Copying...");
     const color = palette_color.slice(1);
     var dummy = document.createElement("textarea");
     document.body.appendChild(dummy);
@@ -69,7 +68,7 @@ class Album extends Component {
 
   formatGenres() {
     const { genres } = this.props.album;
-    if (!genres) {
+    if (genres.length === 0) {
       return "Genres unlisted";
     } else {
       return genres.slice(0, 2).join(" | "); // first two genres max

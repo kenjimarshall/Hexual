@@ -22,7 +22,6 @@ class ColorPanel extends Component {
 
   handleDelete = (id) => {
     if (this.state.numPickers <= 1) {
-      console.log("One or less colors!");
     } else {
       const pickers = this.state.pickers.filter((p) => p.id !== id);
       const numPickers = this.state.numPickers - 1;
@@ -31,7 +30,6 @@ class ColorPanel extends Component {
   };
 
   handleChange = (newColor, picker) => {
-    console.log(picker, newColor);
     const pickers = [...this.state.pickers];
     const indexOfChanged = pickers.indexOf(picker);
     pickers[indexOfChanged] = { ...picker };
@@ -43,7 +41,6 @@ class ColorPanel extends Component {
 
   handleCreate = () => {
     if (this.state.numPickers >= 4) {
-      console.log("Already have four!");
     } else {
       const pickers = [...this.state.pickers];
       pickers.push({
@@ -128,7 +125,6 @@ class ColorPanel extends Component {
 
 $(function () {
   $("#file").on("click touchstart", function () {
-    console.log("Resetting file");
     $(this).val("");
   });
 });
