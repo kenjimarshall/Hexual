@@ -11,8 +11,6 @@ client_secret = os.getenv("SPOT_SECRET")
 class SpotifyConnection(object):
 
     def __init__(self):
-        client_id = client_id
-        client_secret = client_secret
         client_credentials_manager = SpotifyClientCredentials(client_id=client_id,
                                                               client_secret=client_secret)
 

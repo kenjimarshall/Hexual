@@ -108,14 +108,23 @@ class ColorPanel extends Component {
             >
               Search!
             </button>
-            <input
-              type="file"
-              accept="image/*"
-              id="file"
-              multiple={false}
-              className="form-control-file file-input btn btn-light mx-3 mb-2"
-              onChange={(obj) => this.handleImageUpload(obj)}
-            ></input>
+            <div className="custom-file mt-2">
+              <input
+                type="file"
+                accept="image/*"
+                id="file"
+                multiple={false}
+                className="custom-file-input"
+                id="customFile"
+                onChange={(obj) => this.handleImageUpload(obj)}
+              ></input>
+              <label
+                className="custom-file-label text-left"
+                htmlFor="customFile"
+              >
+                Choose file
+              </label>
+            </div>
           </div>
         </div>
       </div>

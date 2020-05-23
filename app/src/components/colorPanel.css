@@ -3,6 +3,7 @@
   width: 100%;
 }
 
-.file-input {
-  width: 300px;
+.custom-file {
+  width: 200px;
+  bottom: 5px;
 }
