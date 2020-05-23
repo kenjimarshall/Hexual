@@ -56,7 +56,7 @@ def cursor_to_album_components(palette_size, cursor, albums_already_seen=None):
     return albums
 
 
-@app.route("/image", methods=["POST"])
+@app.route("/api/image", methods=["POST"])
 def image():
     image_data = request.get_data()
     palette = clusterer.fit_from_bytes(image_data)
@@ -65,7 +65,7 @@ def image():
     }
 
 
-@app.route("/search", methods=["POST"])
+@app.route("/api/search", methods=["POST"])
 def search():
     palette_size = request.json['paletteSize']
     cursor = db.albums.find(request.json["filter"], {
@@ -75,7 +75,7 @@ def search():
     return Response(json.dumps(response), mimetype='application/json')
 
 
-@app.route("/aggregate", methods=["POST"])
+@app.route("/api/aggregate", methods=["POST"])
 def aggregate():
     aggregate_filter = request.json["filter"]
     palette_size = request.json['paletteSize']
@@ -88,7 +88,7 @@ def aggregate():
     return Response(json.dumps(response), mimetype='application/json')
 
 
-@app.route("/palette_search", methods=["POST"])
+@app.route("/api/palette_search", methods=["POST"])
 def palette_search():
     colors = request.json["colors"]
     palette_size = request.json["paletteSize"]

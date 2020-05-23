@@ -58,7 +58,7 @@ class ColorPanel extends Component {
 
   handleImageUpload = ({ target }) => {
     const image = target.files[0];
-    fetch("/image", {
+    fetch("/api/image", {
       method: "POST",
       body: image,
     }).then((res) => {

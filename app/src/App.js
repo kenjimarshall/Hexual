@@ -37,10 +37,9 @@ class App extends Component {
       paletteSize: paletteSize,
       colors: colors,
     };
-    console.log(apiRequest);
 
     trackPromise(
-      fetch("/palette_search", {
+      fetch("/api/palette_search", {
         method: "POST",
         body: JSON.stringify(apiRequest),
         headers: new Headers({
@@ -78,7 +77,7 @@ class App extends Component {
       paletteSize: paletteSize,
     };
     trackPromise(
-      fetch("/aggregate", {
+      fetch("/api/aggregate", {
         method: "POST",
         body: JSON.stringify(apiRequest),
         headers: new Headers({
@@ -123,7 +122,7 @@ class App extends Component {
       paletteSize: paletteSize,
     };
     trackPromise(
-      fetch("/search", {
+      fetch("/api/search", {
         method: "POST",
         body: JSON.stringify(apiRequest),
         headers: new Headers({
