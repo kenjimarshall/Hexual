@@ -1,7 +1,12 @@
 from pymongo import MongoClient
+from dotenv import load_dotenv
+import os
+load_dotenv()
+
+mongo_uri = os.getenv("MONGO")
 
 
 class Connect(object):
     @staticmethod
     def get_connection():
-        return MongoClient("mongodb+srv://kenji:alexachung#1@hexualdb-yhauo.mongodb.net/test?retryWrites=true&w=majority")
+        return MongoClient(mongo_uri)
