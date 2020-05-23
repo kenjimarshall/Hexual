@@ -14,7 +14,7 @@ class SpotifyConnection(object):
             client_credentials_manager=client_credentials_manager)
 
     def search_artist(self, artist):
-        result = self.sp.search(q=artist, limit=5, type="artist", market="CA")
+        result = self.sp.search(q=artist, limit=1, type="artist", market="CA")
         return result
 
     def get_artist_albums(self, artist_id):

@@ -17,6 +17,10 @@ class ClusterManager(object):
         return self.fit(img)
 
     def fit(self, img):
+        print(img.shape)
+        if img.shape[2] == 4:  # transparency channel
+            img = img[:, :, :3]
+        print(img.shape)
         img = img.reshape(-1, 3)
         self.km.fit(img)
         rgb_palette = self.km.cluster_centers_

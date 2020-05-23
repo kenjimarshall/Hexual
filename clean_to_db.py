@@ -37,16 +37,15 @@ def add_by_artist_name(artist_name, artists_visited):
     if "error" in artist_search:
         return
     for artist in artist_search['artists']['items']:
+        artist_name = artist['name']
         artist_id = artist['id']
-        if artist_id in artists_visited:
-            print(artist['name'], " already in set")
+        if artist_name in artists_visited:
+            print(artist_name, " already in set")
             continue
         else:
 
-            artists_visited.add(artist_id)
-
-            artist_name_clean = artist['name']
-            print("ARTIST: ", artist_name_clean)
+            artists_visited.add(artist_name)
+            print("ARTIST: ", artist_name)
             popularity = artist['popularity']
             genres = artist['genres']
             artist_album_search = SPOT.get_artist_albums(artist_id)
@@ -101,7 +100,7 @@ def add_by_artist_name(artist_name, artists_visited):
 
                 # insert entry
                 MONGO_DB.albums.insert_one(
-                    {"artist": artist_name_clean,
+                    {"artist": artist_name,
                         "popularity": popularity,
                         "album": album_name,
                         "artwork": artwork,
@@ -136,13 +135,25 @@ def walk_over_images(directory_to_walk, artists_visited):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
+
     ap.add_argument(
-        '-d', "--dir", help="directory to walk over", required=True)
+        '-d', "--dir", help="directory to walk over", required=False)
     ap.add_argument(
         '-a', "--artists", help="pkl object containing set of artist IDs already visited", required=True)
+    ap.add_argument(
+        '-n', '--name', help="Artis name to add manually.")
+
     args = vars(ap.parse_args())
-    directory = args['dir']
+
+    if not ((args["dir"] and not args['name']) or (not args["dir"] and args["name"])):
+        ap.error("Mus pass either directory (-d) or artist name (-n)")
+
     with open(args['artists'], 'rb') as f:
         artists = pkl.load(f)
 
-    walk_over_images(directory, artists)
+    if args["dir"]:
+        directory = args['dir']
+        walk_over_images(directory, artists)
+    elif args["name"]:
+        artist_name = args["name"]
+        add_by_artist_name(artist_name, artists)
