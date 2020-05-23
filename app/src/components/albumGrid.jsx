@@ -41,7 +41,11 @@ class AlbumGrid extends Component {
   formatTitle = () => {
     let title = this.props.title;
     if (title === null) {
-      return "Results";
+      if (this.state.displayAlbums.length === 0) {
+        return "No Results Found";
+      } else {
+        return "Results";
+      }
     } else {
       return title;
     }

@@ -108,7 +108,7 @@ def palette_search():
 
     if len(perfect_match_response) == 0:
         response["data"].append([])
-        response["titles"].append("No Perfect Matches :(")
+        response["titles"].append("No Perfect Matches")
     else:
         response["data"].append(perfect_match_response)
         response["titles"].append("Perfect Matches")
@@ -127,7 +127,7 @@ def palette_search():
 
         response["data"].append(partial_match_response)
         if len(partial_match_response) == 0:
-            response["titles"].append("No Partial Matches :(")
+            response["titles"].append("No Partial Matches")
         else:
             response["titles"].append("Partial Matches")
 
