@@ -112,15 +112,14 @@ class ColorPanel extends Component {
               <input
                 type="file"
                 accept="image/*"
-                id="file"
                 multiple={false}
                 className="custom-file-input"
-                id="customFile"
+                id="custom-file"
                 onChange={(obj) => this.handleImageUpload(obj)}
               ></input>
               <label
                 className="custom-file-label text-left"
-                htmlFor="customFile"
+                htmlFor="custom-file"
               >
                 Choose file
               </label>
