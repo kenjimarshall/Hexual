@@ -1,5 +1,6 @@
 from flask import Flask, request, Response, json
 from flask_pymongo import PyMongo
+from flask_cors import CORS
 from color_manager import ColorRequestManager
 from cluster_manager import ClusterManager
 from dotenv import load_dotenv
@@ -10,8 +11,10 @@ load_dotenv()
 mongo_uri = os.getenv("MONGO")
 
 app = Flask(__name__)
+CORS(app)
 app.config["MONGO_URI"] = mongo_uri
 mongo = PyMongo(app)
+
 db = mongo.cx.music  # get to db via MongoClient
 clusterer = ClusterManager()
 NEXT_ID = 0
