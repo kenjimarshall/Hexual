@@ -19,21 +19,21 @@ class App extends Component {
     });
   };
 
-  handlePaletteSearch = (pickers) => {
+  handlePaletteSearch = (pickers, genre) => {
     this.resetAlbums();
-    let paletteSize;
     // Check for duplicates
     const colors = pickers.map((picker) => picker.color);
     if (new Set(colors).size !== colors.length) {
       alert("Must query unique colors in your palette!");
       return;
     }
-    this.paletteSearch(colors);
+    this.paletteSearch(colors, genre);
   };
 
-  paletteSearch = (colors) => {
+  paletteSearch = (colors, genre) => {
     let apiRequest = {
       colors: colors,
+      genre: genre,
     };
 
     trackPromise(
@@ -56,20 +56,12 @@ class App extends Component {
 
   handleBrowse = (genre) => {
     this.resetAlbums();
-    let filter;
-    if (genre === "All Genres") {
-      filter = null;
-    } else {
-      filter = {
-        genres: genre,
-      };
-    }
-    this.aggregate(filter);
+    this.aggregate(genre);
   };
 
-  aggregate = (filter) => {
+  aggregate = (genre) => {
     let apiRequest = {
-      filter: filter,
+      genre: genre,
     };
     trackPromise(
       fetch("/api/aggregate", {
@@ -144,13 +136,13 @@ class App extends Component {
     return (
       <React.Fragment>
         <Navbar
-          onSearch={(searchType, paletteSize, search) =>
-            this.handleSearch(searchType, paletteSize, search)
+          onSearch={(searchType, search) =>
+            this.handleSearch(searchType, search)
           }
-          onBrowse={(paletteSize, genre) =>
-            this.handleBrowse(paletteSize, genre)
+          onBrowse={(genre) => this.handleBrowse(genre)}
+          onPaletteSearch={(pickers, genre) =>
+            this.handlePaletteSearch(pickers, genre)
           }
-          onPaletteSearch={(pickers) => this.handlePaletteSearch(pickers)}
         />
         <main className="container">
           <LoadingIndicator />

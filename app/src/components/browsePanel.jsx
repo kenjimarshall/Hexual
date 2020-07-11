@@ -36,8 +36,8 @@ class BrowsePanel extends Component {
                 All Genres
               </option>
               <option disabled>──────────</option>
-              <option value="indie">Indie</option>
               <option value="rock">Rock</option>
+              <option value="indie rock">Indie Rock</option>
               <option value="alternative rock">Alternative Rock</option>
               <option value="art rock">Art Rock</option>
               <option disabled>──────────</option>

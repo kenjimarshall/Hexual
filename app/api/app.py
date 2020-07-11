@@ -81,12 +81,13 @@ def search():
 
 @app.route("/api/aggregate", methods=["POST"])
 def aggregate():
-    aggregate_filter = request.json["filter"]
-    if aggregate_filter == None:
+    genre = request.json["genre"].lower()
+    print(genre)
+    if genre == "All Genres":
         cursor = db.albums.aggregate([{"$sample": {"size": 1000}}])
     else:
         cursor = db.albums.aggregate(
-            [{"$match": aggregate_filter}, {"$sample": {"size": 1000}}])
+            [{"$match": {"genres": genre}}, {"$sample": {"size": 1000}}])
     response = cursor_to_album_components(cursor)
     return Response(json.dumps(response), mimetype='application/json')
 
@@ -94,6 +95,7 @@ def aggregate():
 @app.route("/api/palette_search", methods=["POST"])
 def palette_search():
     colors = request.json["colors"]
+    genre = request.json["genre"]
     num_colors = len(colors)
     albums_already_seen = set()
     response = {
@@ -102,6 +104,9 @@ def palette_search():
     }
 
     perfect_match_api_request = ColorRequestManager.hex_list_to_query(colors)
+    if genre != "All Genres":
+        perfect_match_api_request = {
+            "$and": [{"genres": genre}, perfect_match_api_request]}
     perfect_match_cursor = db.albums.find(perfect_match_api_request)
     perfect_match_response = cursor_to_album_components(
         perfect_match_cursor, albums_already_seen=albums_already_seen)
@@ -123,6 +128,9 @@ def palette_search():
             partial_match_api_request = ColorRequestManager.hex_list_to_query(
                 subset_list)
             print(partial_match_api_request, "\n\n\n")
+            if genre != "All Genres":
+                partial_match_api_request = {
+                    "$and": [{"genres": genre}, partial_match_api_request]}
             partial_match_cursor = db.albums.find(partial_match_api_request)
             partial_match_response.extend(cursor_to_album_components(
                 partial_match_cursor, albums_already_seen=albums_already_seen))

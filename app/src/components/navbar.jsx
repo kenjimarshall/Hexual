@@ -79,22 +79,20 @@ class Navbar extends Component {
         </div>
         <Collapse isOpen={this.state.showColorPanel}>
           <ColorPanel
-            onPaletteSearch={(pickers) => this.props.onPaletteSearch(pickers)}
+            onPaletteSearch={(pickers, genre) =>
+              this.props.onPaletteSearch(pickers, genre)
+            }
           />
         </Collapse>
         <Collapse isOpen={this.state.showSearchPanel}>
           <SearchPanel
-            onSearch={(searchType, paletteSize, search) =>
-              this.props.onSearch(searchType, paletteSize, search)
+            onSearch={(searchType, search) =>
+              this.props.onSearch(searchType, search)
             }
           />
         </Collapse>
         <Collapse isOpen={this.state.showBrowsePanel}>
-          <BrowsePanel
-            onBrowse={(paletteSize, genre) =>
-              this.props.onBrowse(paletteSize, genre)
-            }
-          />
+          <BrowsePanel onBrowse={(genre) => this.props.onBrowse(genre)} />
         </Collapse>
       </main>
     );

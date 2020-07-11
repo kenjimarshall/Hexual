@@ -18,6 +18,11 @@ class ColorPanel extends Component {
         name: this.starterName,
       },
     ],
+    genre: "All Genres",
+  };
+
+  handleGenreChange = ({ target }) => {
+    this.setState({ genre: target.value });
   };
 
   handleDelete = (id) => {
@@ -95,36 +100,93 @@ class ColorPanel extends Component {
           ))}
         </div>
         <div className="col-12 d-flex justify-content-center mt-3">
-          <div className="form-group text-center align-items-center">
-            <button
-              className="btn btn-light mx-3 mb-2"
-              onClick={this.handleCreate}
-            >
-              Add Tone
-            </button>
-            <button
-              className="btn btn-primary mx-3 mb-2"
-              onClick={() => this.props.onPaletteSearch(this.state.pickers)}
-            >
-              Search!
-            </button>
-            <div className="custom-file mt-2">
-              <input
-                type="file"
-                accept="image/*"
-                multiple={false}
-                className="custom-file-input"
-                id="custom-file"
-                onChange={(obj) => this.handleImageUpload(obj)}
-              ></input>
-              <label
-                className="custom-file-label text-left"
-                htmlFor="custom-file"
+          <form>
+            <div className="form-group text-center">
+              <button
+                className="btn btn-outline-secondary mb-2 mx-2"
+                type="button"
+                onClick={this.handleCreate}
               >
-                Choose file
-              </label>
+                Add Colour
+              </button>
+              <div className="custom-file mt-2 mx-2">
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple={false}
+                  className="custom-file-input"
+                  id="custom-file"
+                  onChange={(obj) => this.handleImageUpload(obj)}
+                ></input>
+                <label
+                  className="custom-file-label text-left"
+                  htmlFor="custom-file"
+                >
+                  Choose file
+                </label>
+              </div>
             </div>
-          </div>
+            <div className="input-group">
+              <select
+                className="custom-select mx-2"
+                id="selectGenre"
+                autoComplete="off"
+                onChange={this.handleGenreChange}
+              >
+                <option defaultValue value="All Genres">
+                  All Genres
+                </option>
+                <option disabled>──────────</option>
+                <option value="rock">Rock</option>
+                <option value="indie rock">Indie Rock</option>
+                <option value="alternative rock">Alternative Rock</option>
+                <option value="art rock">Art Rock</option>
+                <option disabled>──────────</option>
+                <option value="punk">Punk</option>
+                <option value="metal">Metal</option>
+                <option value="grunge">Grunge</option>
+                <option disabled>──────────</option>
+                <option value="reggae">Reggae</option>
+                <option value="funk">Funk</option>
+                <option value="rap">Hip-Hop</option>
+                <option value="trap">Trap</option>
+                <option value="pop rap">Pop Rap</option>
+                <option value="conscious hip=hop">Conscious Hip-Hop</option>
+                <option disabled>──────────</option>
+                <option value="r&b">R&B</option>
+                <option value="pop">Pop</option>
+                <option value="art pop">Art Pop</option>
+                <option value="country">Country</option>
+                <option value="folk">Folk</option>
+                <option disabled>──────────</option>
+                <option value="classical">Classical</option>
+                <option value="jazz">Jazz</option>
+                <option value="blues">Blues</option>
+                <option disabled>──────────</option>
+                <option value="edm">EDM</option>
+                <option value="electro">Electronic</option>
+                <option value="house">House</option>
+                <option value="techno">Techno</option>
+                <option value="dance">Dance</option>
+                <option disabled>──────────</option>
+                <option value="chillhop">Chillhop</option>
+                <option value="lo-fi beats">Lo-Fi</option>
+                <option value="ambient">Ambient</option>
+              </select>
+              <button
+                className="btn btn-primary mx-2"
+                type="button"
+                onClick={() =>
+                  this.props.onPaletteSearch(
+                    this.state.pickers,
+                    this.state.genre
+                  )
+                }
+              >
+                Search!
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     );
