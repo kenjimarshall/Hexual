@@ -96,7 +96,8 @@ def aggregate():
 @app.route("/api/palette_search", methods=["POST"])
 def palette_search():
     colors = request.json["colors"]
-    palette_size = request.json["paletteSize"]
+    num_colors = len(colors)
+    palette_size = 4
 
     albums_already_seen = set()
     response = {
@@ -116,14 +117,16 @@ def palette_search():
         response["data"].append(perfect_match_response)
         response["titles"].append("Perfect Matches")
 
-    if palette_size > 1:
-        subsets = list(itertools.combinations(colors, palette_size-1))
+    if palette_size > 1:  # also query subsets
+        subsets = list(itertools.combinations(colors, num_colors-1))
+        print(subsets)
         partial_match_response = []
         for subset in subsets:
             subset_list = list(subset)
             subset_list.append(subset[-1])  # duplicate last color
             partial_match_api_request = ColorRequestManager.hex_list_to_query(
                 subset_list)
+            print(partial_match_api_request, "\n\n\n")
             partial_match_cursor = db.albums.find(partial_match_api_request)
             partial_match_response.extend(cursor_to_album_components(
                 palette_size, partial_match_cursor, albums_already_seen=albums_already_seen))

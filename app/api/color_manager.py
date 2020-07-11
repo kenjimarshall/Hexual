@@ -8,31 +8,28 @@ class ColorRequestManager(object):
 
     @staticmethod
     def hex_list_to_query(hex_list):
-        paletteSize = len(hex_list)
         query = {"$and": []}
         for hex_string in hex_list:
             lab = ColorRequestManager.hex_to_lab(hex_string)
-            or_subdict = {
-                "$or": []
-            }
-            for lab_num in range(paletteSize):  # 1, 2, 3...
-                and_subdict = {
-                    "$and": []
+            hex_subdict = {
+                "lab": {
+                    "$elemMatch": {
+                        "l": {
+                            "$lte": lab[0] + ColorRequestManager.color_flex,
+                            "$gte": lab[0] - ColorRequestManager.color_flex
+                        },
+                        "a": {
+                            "$lte": lab[1] + ColorRequestManager.color_flex,
+                            "$gte": lab[1] - ColorRequestManager.color_flex
+                        },
+                        "b": {
+                            "$lte": lab[2] + ColorRequestManager.color_flex,
+                            "$gte": lab[2] - ColorRequestManager.color_flex
+                        }
+                    }
                 }
-                for field, number in zip(['l', 'a', 'b'], lab):
-                    and_subdict["$and"].extend([
-                        {f"lab.{lab_num}.{field}": {
-                            "$lt": number + ColorRequestManager.color_flex
-                        }},
-                        {f"lab.{lab_num}.{field}": {
-                            "$gt": number - ColorRequestManager.color_flex
-                        }}
-                    ]
-                    )
-                or_subdict["$or"].append(
-                    and_subdict
-                )
-            query["$and"].append(or_subdict)
+            }
+            query["$and"].append(hex_subdict)
 
         return query
 
