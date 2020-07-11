@@ -1,15 +1,12 @@
 from sklearn.cluster import KMeans
-import skimage.io
-from skimage.color import rgb2lab, lab2rgb
 from collections import Counter
 from PIL import Image
 import numpy as np
 import io
-import base64
 
 
 class ClusterManager(object):
-    def __init__(self, n_clusters=4):
+    def __init__(self):
         self.km = KMeans(n_clusters=4, n_init=1, max_iter=8)
 
     def fit_from_bytes(self, img):
