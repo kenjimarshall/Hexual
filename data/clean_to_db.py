@@ -146,8 +146,7 @@ if __name__ == "__main__":
     args = vars(ap.parse_args())
 
     if not ((args["dir"] and not args['name']) or (not args["dir"] and args["name"])):
-        ap.error("Must
-         pass either directory (-d) or artist name (-n)")
+        ap.error("Must pass either directory (-d) or artist name (-n)")
 
     with open(args['artists'], 'rb') as f:
         artists = pkl.load(f)
@@ -156,5 +155,5 @@ if __name__ == "__main__":
         directory = args['dir']
         walk_over_images(directory, artists)
     elif args["name"]:
-        artist_name = args["name"]
-        add_by_artist_name(artist_name, artists)
+        artist_to_add = args["name"]
+        add_by_artist_name(artist_to_add, artists)
