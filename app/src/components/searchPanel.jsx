@@ -6,7 +6,6 @@ class SearchPanel extends Component {
   state = {
     searchType: "artist",
     search: null,
-    paletteSize: 4,
   };
 
   handleArtistSelect = () => {
@@ -19,10 +18,6 @@ class SearchPanel extends Component {
 
   handleSearchChange = ({ target }) => {
     this.setState({ search: target.value });
-  };
-
-  handlePaletteChange = ({ target }) => {
-    this.setState({ paletteSize: parseInt(target.value) });
   };
 
   render() {
@@ -47,7 +42,6 @@ class SearchPanel extends Component {
                   onClick={() =>
                     this.props.onSearch(
                       this.state.searchType,
-                      this.state.paletteSize,
                       this.state.search
                     )
                   }
@@ -58,20 +52,6 @@ class SearchPanel extends Component {
             </div>
           </div>
           <div className="form-group d-flex justify-content-center mb-5">
-            <select
-              className="custom-select mr-sm-2"
-              id="paletteSize"
-              name="paletteSize"
-              autoComplete="off"
-              onChange={this.handlePaletteChange}
-            >
-              <option defaultValue value={4}>
-                4 Colours
-              </option>
-              <option value={3}>3 Colours</option>
-              <option value={2}>2 Colours</option>
-              <option value={1}>1 Colour</option>
-            </select>
             <div className="form-check form-check-inline">
               <input
                 className="form-check-input"

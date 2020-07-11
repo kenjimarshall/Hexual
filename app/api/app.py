@@ -20,7 +20,7 @@ clusterer = ClusterManager()
 NEXT_ID = 0
 
 
-def generate_album(doc, palette_size):
+def generate_album(doc):
     album = dict()
 
     global NEXT_ID
@@ -32,14 +32,14 @@ def generate_album(doc, palette_size):
     album["year"] = doc["year"]
     album["genres"] = doc["genres"]
     album["spotifyUrl"] = doc["spotify_url"]
-    album["palette"] = doc["palette"][0:palette_size]
+    album["palette"] = doc["palette"]
     album["artworkUrl"] = doc["artwork"]
     album["popularity"] = doc["popularity"]
 
     return album
 
 
-def cursor_to_album_components(palette_size, cursor, albums_already_seen=None):
+def cursor_to_album_components(cursor, albums_already_seen=None):
     albums = []
     if albums_already_seen is None:
         album_representations = set()
@@ -47,7 +47,7 @@ def cursor_to_album_components(palette_size, cursor, albums_already_seen=None):
         album_representations = albums_already_seen
 
     if type(cursor) == dict:
-        albums.append(generate_album(cursor, palette_size))
+        albums.append(generate_album(cursor))
     else:
         for doc in cursor:
             album_representation = (
@@ -56,7 +56,7 @@ def cursor_to_album_components(palette_size, cursor, albums_already_seen=None):
             )  # if this is a duplicate album ignore
             if not album_representation in album_representations:
                 album_representations.add(album_representation)
-                albums.append(generate_album(doc, palette_size))
+                albums.append(generate_album(doc))
 
     return albums
 
@@ -72,24 +72,22 @@ def image():
 
 @app.route("/api/search", methods=["POST"])
 def search():
-    palette_size = request.json['paletteSize']
     cursor = db.albums.find(request.json["filter"], {
                             'score': {'$meta': 'textScore'}})
     cursor.sort([('score', {'$meta': 'textScore'})])
-    response = cursor_to_album_components(palette_size, cursor)
+    response = cursor_to_album_components(cursor)
     return Response(json.dumps(response), mimetype='application/json')
 
 
 @app.route("/api/aggregate", methods=["POST"])
 def aggregate():
     aggregate_filter = request.json["filter"]
-    palette_size = request.json['paletteSize']
     if aggregate_filter == None:
         cursor = db.albums.aggregate([{"$sample": {"size": 1000}}])
     else:
         cursor = db.albums.aggregate(
             [{"$match": aggregate_filter}, {"$sample": {"size": 1000}}])
-    response = cursor_to_album_components(palette_size, cursor)
+    response = cursor_to_album_components(cursor)
     return Response(json.dumps(response), mimetype='application/json')
 
 
@@ -97,8 +95,6 @@ def aggregate():
 def palette_search():
     colors = request.json["colors"]
     num_colors = len(colors)
-    palette_size = 4
-
     albums_already_seen = set()
     response = {
         "data": [],
@@ -108,7 +104,7 @@ def palette_search():
     perfect_match_api_request = ColorRequestManager.hex_list_to_query(colors)
     perfect_match_cursor = db.albums.find(perfect_match_api_request)
     perfect_match_response = cursor_to_album_components(
-        palette_size, perfect_match_cursor, albums_already_seen=albums_already_seen)
+        perfect_match_cursor, albums_already_seen=albums_already_seen)
 
     if len(perfect_match_response) == 0:
         response["data"].append([])
@@ -117,7 +113,7 @@ def palette_search():
         response["data"].append(perfect_match_response)
         response["titles"].append("Perfect Matches")
 
-    if palette_size > 1:  # also query subsets
+    if num_colors > 1:  # also query subsets
         subsets = list(itertools.combinations(colors, num_colors-1))
         print(subsets)
         partial_match_response = []
@@ -129,7 +125,7 @@ def palette_search():
             print(partial_match_api_request, "\n\n\n")
             partial_match_cursor = db.albums.find(partial_match_api_request)
             partial_match_response.extend(cursor_to_album_components(
-                palette_size, partial_match_cursor, albums_already_seen=albums_already_seen))
+                partial_match_cursor, albums_already_seen=albums_already_seen))
 
         response["data"].append(partial_match_response)
         if len(partial_match_response) == 0:

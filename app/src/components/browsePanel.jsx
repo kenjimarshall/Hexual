@@ -4,11 +4,6 @@ import "./browsePanel.css";
 class BrowsePanel extends Component {
   state = {
     genre: "All Genres",
-    paletteSize: 4,
-  };
-
-  handlePaletteChange = ({ target }) => {
-    this.setState({ paletteSize: parseInt(target.value) });
   };
 
   handleGenreChange = ({ target }) => {
@@ -19,36 +14,18 @@ class BrowsePanel extends Component {
     return (
       <div className="col-12 d-flex justify-content-center mb-4">
         <form>
-          <div className="form-row align-items-center mb-2">
-            <div className="col-auto my-1">
-              <select
-                className="custom-select mr-sm-2"
-                id="paletteSize"
-                name="paletteSize"
-                autoComplete="off"
-                onChange={this.handlePaletteChange}
-              >
-                <option defaultValue value={4}>
-                  4 Colours
-                </option>
-                <option value={3}>3 Colours</option>
-                <option value={2}>2 Colours</option>
-                <option value={1}>1 Colour</option>
-              </select>
-            </div>
+          <div className="d-flex justify-content-center mb-2">
             <div className="col-auto my-1">
               <button
                 type="button"
                 className="btn btn-outline-secondary"
-                onClick={() =>
-                  this.props.onBrowse(this.state.paletteSize, this.state.genre)
-                }
+                onClick={() => this.props.onBrowse(this.state.genre)}
               >
                 Explore
               </button>
             </div>
           </div>
-          <div className="form-group d-flex justify-content-center mb-5">
+          <div className="d-flex justify-content-center mb-5">
             <select
               className="custom-select mr-sm-2"
               id="selectGenre"

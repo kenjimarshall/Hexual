@@ -28,13 +28,11 @@ class App extends Component {
       alert("Must query unique colors in your palette!");
       return;
     }
-    paletteSize = pickers.length;
-    this.paletteSearch(paletteSize, colors);
+    this.paletteSearch(colors);
   };
 
-  paletteSearch = (paletteSize, colors) => {
+  paletteSearch = (colors) => {
     let apiRequest = {
-      paletteSize: paletteSize,
       colors: colors,
     };
 
@@ -56,7 +54,7 @@ class App extends Component {
     );
   };
 
-  handleBrowse = (paletteSize, genre) => {
+  handleBrowse = (genre) => {
     this.resetAlbums();
     let filter;
     if (genre === "All Genres") {
@@ -66,13 +64,12 @@ class App extends Component {
         genres: genre,
       };
     }
-    this.aggregate(filter, paletteSize);
+    this.aggregate(filter);
   };
 
-  aggregate = (filter, paletteSize) => {
+  aggregate = (filter) => {
     let apiRequest = {
       filter: filter,
-      paletteSize: paletteSize,
     };
     trackPromise(
       fetch("/api/aggregate", {
@@ -90,7 +87,7 @@ class App extends Component {
     );
   };
 
-  handleSearch = (searchType, paletteSize, search) => {
+  handleSearch = (searchType, search) => {
     this.resetAlbums();
     let filter;
     let albumSearch;
@@ -110,13 +107,12 @@ class App extends Component {
         },
       };
     }
-    this.search(filter, paletteSize, albumSearch);
+    this.search(filter, albumSearch);
   };
 
-  search = (filter, paletteSize, albumSearch) => {
+  search = (filter, albumSearch) => {
     let apiRequest = {
       filter: filter,
-      paletteSize: paletteSize,
     };
     trackPromise(
       fetch("/api/search", {
