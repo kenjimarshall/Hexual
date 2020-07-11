@@ -141,12 +141,13 @@ if __name__ == "__main__":
     ap.add_argument(
         '-a', "--artists", help="pkl object containing set of artist IDs already visited", required=True)
     ap.add_argument(
-        '-n', '--name', help="Artis name to add manually.")
+        '-n', '--name', help="Artist name to add manually.")
 
     args = vars(ap.parse_args())
 
     if not ((args["dir"] and not args['name']) or (not args["dir"] and args["name"])):
-        ap.error("Mus pass either directory (-d) or artist name (-n)")
+        ap.error("Must
+         pass either directory (-d) or artist name (-n)")
 
     with open(args['artists'], 'rb') as f:
         artists = pkl.load(f)

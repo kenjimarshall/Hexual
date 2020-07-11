@@ -10,7 +10,7 @@ import base64
 
 class ClusterManager(object):
     def __init__(self, n_clusters=4):
-        self.km = KMeans(n_clusters=4, n_init=5, max_iter=100)
+        self.km = KMeans(n_clusters=4, n_init=1, max_iter=50)
 
     def fit_from_bytes(self, img):
         img = self.bytes_to_arr(img)
