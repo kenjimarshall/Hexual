@@ -101,8 +101,13 @@ def palette_search():
         "data": [],
         "titles": []
     }
+    if num_colors == 1:
+        perfect_match_api_request = ColorRequestManager.hex_list_to_query_ordered(
+            colors)
+    else:
+        perfect_match_api_request = ColorRequestManager.hex_list_to_query(
+            colors)
 
-    perfect_match_api_request = ColorRequestManager.hex_list_to_query(colors)
     if genre != "All Genres":
         perfect_match_api_request = {
             "$and": [{"genres": genre}, perfect_match_api_request]}
@@ -119,8 +124,12 @@ def palette_search():
             partial_match_response = []
             for subset in subsets:
                 subset_list = list(subset)
-                partial_match_api_request = ColorRequestManager.hex_list_to_query(
-                    subset_list)
+                if num_colors == 2:
+                    partial_match_api_request = ColorRequestManager.hex_list_to_query_ordered(
+                        subset_list)
+                else:
+                    partial_match_api_request = ColorRequestManager.hex_list_to_query(
+                        subset_list)
                 if genre != "All Genres":
                     partial_match_api_request = {
                         "$and": [{"genres": genre}, partial_match_api_request]}
