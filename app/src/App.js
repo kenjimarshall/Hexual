@@ -45,10 +45,13 @@ class App extends Component {
         }),
       }).then((res) => {
         res.json().then((data) => {
+          console.log("Results received");
           let albumGrids = data.data.map((albumGrid) =>
             this.sortByPopularity(albumGrid)
           );
+          console.log("Results sorted");
           this.setState({ albumGrids: albumGrids, gridTitles: data.titles });
+          console.log("State updated");
         });
       })
     );

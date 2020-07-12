@@ -82,7 +82,6 @@ def search():
 @app.route("/api/aggregate", methods=["POST"])
 def aggregate():
     genre = request.json["genre"].lower()
-    print(genre)
     if genre == "All Genres":
         cursor = db.albums.aggregate([{"$sample": {"size": 1000}}])
     else:
@@ -107,38 +106,36 @@ def palette_search():
     if genre != "All Genres":
         perfect_match_api_request = {
             "$and": [{"genres": genre}, perfect_match_api_request]}
-    perfect_match_cursor = db.albums.find(perfect_match_api_request)
+    perfect_match_cursor = db.albums.find(
+        perfect_match_api_request).limit(2000)
     perfect_match_response = cursor_to_album_components(
         perfect_match_cursor, albums_already_seen=albums_already_seen)
 
     if len(perfect_match_response) == 0:
         response["data"].append([])
         response["titles"].append("No Perfect Matches")
-    else:
-        response["data"].append(perfect_match_response)
-        response["titles"].append("Perfect Matches")
-
-    if num_colors > 1:  # also query subsets
-        subsets = list(itertools.combinations(colors, num_colors-1))
-        print(subsets)
-        partial_match_response = []
-        for subset in subsets:
-            subset_list = list(subset)
-            subset_list.append(subset[-1])  # duplicate last color
-            partial_match_api_request = ColorRequestManager.hex_list_to_query(
-                subset_list)
-            print(partial_match_api_request, "\n\n\n")
-            if genre != "All Genres":
-                partial_match_api_request = {
-                    "$and": [{"genres": genre}, partial_match_api_request]}
-            partial_match_cursor = db.albums.find(partial_match_api_request)
-            partial_match_response.extend(cursor_to_album_components(
-                partial_match_cursor, albums_already_seen=albums_already_seen))
+        if num_colors > 1:  # also query subsets to find partial matches
+            subsets = list(itertools.combinations(colors, num_colors-1))
+            partial_match_response = []
+            for subset in subsets:
+                subset_list = list(subset)
+                partial_match_api_request = ColorRequestManager.hex_list_to_query(
+                    subset_list)
+                if genre != "All Genres":
+                    partial_match_api_request = {
+                        "$and": [{"genres": genre}, partial_match_api_request]}
+                partial_match_cursor = db.albums.find(
+                    partial_match_api_request).limit(2000)
+                partial_match_response.extend(cursor_to_album_components(
+                    partial_match_cursor, albums_already_seen=albums_already_seen))
 
         response["data"].append(partial_match_response)
         if len(partial_match_response) == 0:
             response["titles"].append("No Partial Matches")
         else:
             response["titles"].append("Partial Matches")
+    else:
+        response["data"].append(perfect_match_response)
+        response["titles"].append("Perfect Matches")
 
     return Response(json.dumps(response), mimetype='application/json')

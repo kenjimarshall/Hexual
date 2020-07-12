@@ -4,7 +4,7 @@ import numpy as np
 
 class ColorRequestManager(object):
 
-    color_flex = 6
+    color_flex = 4
 
     @staticmethod
     def hex_list_to_query(hex_list):
