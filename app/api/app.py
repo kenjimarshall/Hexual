@@ -101,7 +101,7 @@ def palette_search():
         "data": [],
         "titles": []
     }
-    if num_colors == 1:
+    if num_colors <= 2:
         perfect_match_api_request = ColorRequestManager.hex_list_to_query_ordered(
             colors)
     else:
@@ -124,7 +124,7 @@ def palette_search():
             partial_match_response = []
             for subset in subsets:
                 subset_list = list(subset)
-                if num_colors == 2:
+                if num_colors <= 3:
                     partial_match_api_request = ColorRequestManager.hex_list_to_query_ordered(
                         subset_list)
                 else:
