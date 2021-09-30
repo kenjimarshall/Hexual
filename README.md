@@ -2,8 +2,6 @@
 
 Online at [hexual.ca](http://www.hexual.ca).
 
-Check out the [more detailed writeup](http://kenjimarshall.com/projects/hexual.html) on my website.
-
 Hexual is a tool to explore albums via their artwork. Built with MongoDB, Flask, and React.
 
 # Data
